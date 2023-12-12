@@ -1,35 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>GitHub Pages with Google Login and Hash Check</title>
+    <title>GitHub Pages with Google Login</title>
 </head>
 <body>
-    <div id="protected-content" style="display:none;">
-        <!-- Your protected content goes here -->
-        <h1>Welcome, authenticated usr!</h1>
+    <div id="content" style="display:none;">
+        <!-- Content visible only after successful login -->
+        <h1>Welcome, authenticated user!</h1>
     </div>
     <div id="signin-button"></div>
 
     <script src="https://apis.google.com/js/platform.js?onload=initGoogleAPI" async defer></script>
     <script>
-        let clientID = 'AIzaSyChKFRT7LV1PJocipl16-g-Ry24OXiHwxE'; // Ensure this is declared only once
-        const expectedHash = '8b0f7932738dda6bd5b31cadcb462e0b0cd2024e4df6ea7c6952effdfc30af15'; // Replace with your expected hash
+        let clientId = 'AIzaSyChKFRT7LV1PJocipl16-g-Ry24OXiHwxE'; // Replace with your actual Client ID from Google Cloud Console
 
         function onSignIn(googleUser) {
+            // Handling user info after successful login
             var profile = googleUser.getBasicProfile();
-            let emailHash = simpleHash(profile.getEmail());
+            console.log('User signed in:', profile.getName());
 
-            if (emailHash === expectedHash) {
-                // Show the protected content
-                document.getElementById('protected-content').style.display = 'block';
-            }
-
-            // Hide the login button
+            // Hide the sign-in button and show content
             document.getElementById('signin-button').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
         }
 
         function onFailure(error) {
-            console.log(error);
+            console.log('Sign-in failed:', error);
         }
 
         function renderButton() {
@@ -44,24 +40,12 @@
             });
         }
 
-        
         function initGoogleAPI() {
             gapi.load('auth2', function() {
                 gapi.auth2.init({
-                    client_id: clientID
+                    client_id: clientId
                 }).then(renderButton);
             });
-        }
-
-        function simpleHash(str) {
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                let char = str.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash = hash & hash; // Convert to 32bit integer
-            }
-            console.log(hash)
-            return hash;
         }
     </script>
 </body>
