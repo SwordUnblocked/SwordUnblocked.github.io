@@ -8,22 +8,22 @@
         img-src 'self'; 
         connect-src 'self'; 
         font-src 'self';">
-    <title>Skibidi (Toilet) Dop Dop Dop yes yes</title>
+    <title>Skibidi Dop Dop Dop yes yes</title>
 </head>
 <body>
     <div id="content" style="display:none;">
         <h1>Welcome, authenticated user!</h1>
     </div>
-    <div id="signin-button"></div>
+    <div id="signin-button">Sign In</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
     <script src="https://apis.google.com/js/platform.js?onload=initGoogleAPI" async defer></script>
     <script>
-        let clientId = '692476350843-4jcjp4s3emmjs4s4o058jime0dfo9c8a.apps.googleusercontent.com'; // Replace with your actual Client ID from Google Cloud Console
+        let clientId = '692476350843-4jcjp4s3emmjs4s4o058jime0dfo9c8a.apps.googleusercontent.com';
 
         let authorizedHashes = [
             '8b0f7932738dda6bd5b31cadcb462e0b0cd2024e4df6ea7c6952effdfc30af15',
-            'SHA256_HASH_OF_AUTHORIZED_EMAIL_2' // Replace with actual hash
+            'another_sha256_hash'
         ];
 
         function onSignIn(googleUser) {
@@ -41,7 +41,7 @@
         }
 
         function onFailure(error) {
-            console.log('Sign-in failed:', error);
+            console.error('Sign-in failed:', error);
         }
 
         function renderButton() {
@@ -57,17 +57,21 @@
         }
 
         function initGoogleAPI() {
-            if (typeof gapi === 'undefined') {
-                console.error('Google API failed to load');
-                return;
-            }
-
             gapi.load('auth2', function() {
                 gapi.auth2.init({
                     client_id: clientId
-                }).then(renderButton, onFailure);
+                }).then(renderButton);
             });
         }
+
+        document.getElementById('signin-button').addEventListener('click', function() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signIn().then(function (googleUser) {
+                onSignIn(googleUser);
+            }, function (error) {
+                onFailure(error);
+            });
+        });
     </script>
 </body>
 </html>
