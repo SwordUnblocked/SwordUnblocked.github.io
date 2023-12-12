@@ -82,3 +82,71 @@
     </script>
 </body>
 </html>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GitHub Pages with Google Login and Hash Check</title>
+</head>
+<body>
+    <div id="protected-content" style="display:none;">
+        <!-- Your protected content goes here -->
+        <h1>Welcome, authenticated user!</h1>
+    </div>
+    <div id="signin-button"></div>
+
+    <script src="https://apis.google.com/js/platform.js?onload=initGoogleAPI" async defer></script>
+    <script>
+        let clientId = 'YXRhci5hc3FAZ21haWwuY29t';
+        const expectedHash = '8b0f7932738dda6bd5b31cadcb462e0b0cd2024e4df6ea7c6952effdfc30af15'; // Replace with your expected hash
+
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            let emailHash = simpleHash(profile.getEmail());
+
+            if (emailHash === expectedHash) {
+                // Show the protected content
+                document.getElementById('protected-content').style.display = 'block';
+            }
+
+            // Hide the login button
+            document.getElementById('signin-button').style.display = 'none';
+        }
+
+        function onFailure(error) {
+            console.log(error);
+        }
+
+        function renderButton() {
+            gapi.signin2.render('signin-button', {
+                'scope': 'profile email',
+                'width': 240,
+                'height': 50,
+                'longtitle': true,
+                'theme': 'dark',
+                'onsuccess': onSignIn,
+                'onfailure': onFailure
+            });
+        }
+
+        function initGoogleAPI() {
+            gapi.load('auth2', function() {
+                gapi.auth2.init({
+                    client_id: clientId
+                }).then(renderButton);
+            });
+        }
+
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                let char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            console.log(hash)
+            return hash;
+        }
+    </script>
+</body>
+</html>
