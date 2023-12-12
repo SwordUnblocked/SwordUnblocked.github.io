@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'none'; 
-        script-src 'self' https://apis.google.com https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js;
+        script-src 'self' https://apis.google.com;
         style-src 'self' 'unsafe-inline'; 
         img-src 'self'; 
         connect-src 'self'; 
@@ -16,20 +16,29 @@
     </div>
     <div id="signin-button">Sign In</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
     <script src="https://apis.google.com/js/platform.js?onload=initGoogleAPI" async defer></script>
     <script>
         let clientId = '692476350843-4jcjp4s3emmjs4s4o058jime0dfo9c8a.apps.googleusercontent.com';
 
         let authorizedHashes = [
-            '8b0f7932738dda6bd5b31cadcb462e0b0cd2024e4df6ea7c6952effdfc30af15',
-            'another_sha256_hash'
+            '-1718874134',
+            'simple_hash_of_email_2'
+            // Command: node -e "const simpleHash = str => { let hash = 0; for (let i = 0; i < str.length; i++) { hash = (hash << 5) - hash + str.charCodeAt(i); hash &= hash; } return hash.toString(); }; console.log(simpleHash('user@example.com'));"
         ];
+
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = (hash << 5) - hash + str.charCodeAt(i);
+                hash = hash & hash; // Convert to 32-bit integer
+            }
+            return hash.toString();
+        }
 
         function onSignIn(googleUser) {
             var profile = googleUser.getBasicProfile();
             let email = profile.getEmail();
-            let emailHash = CryptoJS.SHA256(email).toString();
+            let emailHash = simpleHash(email);
 
             if (authorizedHashes.includes(emailHash)) {
                 document.getElementById('content').style.display = 'block';
