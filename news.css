@@ -1,5 +1,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@600&display=swap');
 
+.rank-section {
+    text-align: center;
+    padding: 20px;
+    color: white; /* Assuming you want white text */
+}
+
+.rank-item {
+    display: inline-block; /* Aligns image and text side by side */
+    margin: 10px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1); /* Slight background for visibility */
+    border-radius: 10px; /* Optional: for rounded corners */
+}
+
+.rank-title {
+    font-size: 24px; /* Adjust as needed */
+    margin-bottom: 10px;
+}
+
+.rank-image {
+    width: 100px; /* Adjust as needed */
+    height: auto;
+    margin-right: 10px;
+}
+
+.rank-description {
+    font-size: 16px; /* Adjust as needed */
+}
+
 body {
     background: radial-gradient(circle at bottom, navy 0, black 100%);
     height: 100vh;
